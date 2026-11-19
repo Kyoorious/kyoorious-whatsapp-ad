@@ -2,7 +2,7 @@
 // NOTE: this is a JS template literal - avoid backslashes and the dollar-brace sequence inside.
 export const APP_HTML = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Kyoorious WhatsApp</title>
 <style>
 /* ---- theme tokens: change these to re-brand ---- */
@@ -176,7 +176,8 @@ td.err{white-space:normal;max-width:260px;color:var(--bad);font-size:12px}
 .modal .mf input{flex:1;background:#fff;color:#161a2b;border:0;border-radius:24px;padding:12px 18px;outline:none}
 .modal .icon{color:#fff}.modal .icon:hover{background:rgba(255,255,255,.15);color:#fff}
 .modal .icon.send{background:var(--brand);color:var(--brand-ink)}
-.adwrap{max-width:900px;margin:0 auto}
+.adwrap{max-width:900px;margin:16px auto 0}
+#camp{margin-top:0}
 .adstrip{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
 .adstrip .link{border:0;background:transparent;color:var(--brand);font-weight:600;padding:0}
 .adhead,.adr{display:grid;grid-template-columns:128px 1fr 1fr 124px 36px;gap:8px;align-items:center;padding:6px 14px}
@@ -214,6 +215,106 @@ td.err{white-space:normal;max-width:260px;color:var(--bad);font-size:12px}
   .page{padding:12px}
   .b{max-width:88%}
 }
+
+.acct{width:34px;height:34px;border-radius:50%;border:0;background:var(--brand);color:var(--brand-ink);font-weight:700;display:grid;place-items:center;flex:0 0 auto}
+.acctmenu{position:fixed;top:56px;right:12px;z-index:70;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 30px rgba(10,12,30,.25);padding:12px;min-width:220px;max-width:calc(100vw - 24px)}
+.bnav{display:none}
+.tab{white-space:nowrap}
+html{-webkit-text-size-adjust:100%}
+body{overflow-x:hidden}
+
+@media(max-width:820px){
+  body{padding-bottom:calc(62px + env(safe-area-inset-bottom))}
+  input,textarea,select,.field,.adin,.ccmenu input{font-size:16px}
+  /* top bar: logo + status + account; navigation moves to the bottom bar */
+  .top{padding:8px 12px;gap:10px;min-height:52px}
+  .tabs{display:none}
+  .logo span{font-size:15px}
+  .live{gap:10px}.live #upd{display:none}
+  /* bottom navigation */
+  .bnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+  .bnav button{flex:1;border:0;background:transparent;color:var(--muted);padding:8px 4px 7px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;position:relative;min-height:56px}
+  .bnav button.on{color:var(--brand)}
+  .bnav .ic{width:24px;height:24px}
+  .bnav .count{position:absolute;top:4px;left:calc(50% + 6px);min-width:18px;font-size:10px;padding:0 5px}
+  .page{padding:12px 12px 24px}
+  /* dashboard */
+  .kpis{grid-template-columns:repeat(2,1fr);gap:10px}
+  .kpi{padding:12px 14px}.kpi b{font-size:24px}
+  .panel-h{padding:12px;gap:10px}
+  .panel-h h2{flex:1 1 100%;margin:0}
+  .chips{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+  .chipbtn{white-space:nowrap;padding:7px 14px}
+  .panel-h .field{flex:1 1 0;min-width:0;padding:10px 12px}
+  .panel-h .btn{padding:10px 14px}
+  .scroll{max-height:none;overflow:visible}
+  /* recipients as cards */
+  .rt,.rt tbody{display:block;width:100%}.rt thead{display:none}
+  .rt tr{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:14px 12px;border-bottom:1px solid var(--line)}
+  .rt td{display:block;padding:0;border:0;white-space:normal;text-align:left}
+  .rt td:nth-child(1){flex:1 1 100%}
+  .rt td:nth-child(2){flex:1 1 100%}
+  .rt td:nth-child(3){order:3;font-size:13px;color:var(--muted)}
+  .rt td:nth-child(3) .cnt{color:var(--text);font-weight:600}.rt td:nth-child(3) .cnt:after{content:' sent'}
+  .rt td:nth-child(3) .msub{display:inline;margin:0 0 0 4px;max-width:none}.rt td:nth-child(3) .msub:before{content:'('}.rt td:nth-child(3) .msub:after{content:')'}
+  .rt td:nth-child(4){order:4;font-size:13px;color:var(--muted)}.rt td:nth-child(4):before{content:'by '}
+  .rt td:nth-child(6){order:5;font-size:13px;color:var(--muted)}
+  .rt td:nth-child(6) .sub{display:none}
+  .rt td:nth-child(5) .muted{display:none}
+  .rt td:nth-child(5):empty{display:none}
+  .rt td:nth-child(5){order:9;margin-left:auto}
+  .rt td:nth-child(5) .btn{padding:8px 14px}
+  .rt .byc{max-width:170px;display:inline-block;vertical-align:bottom}
+  .rt .nm{max-width:none}
+  .rt tr td[colspan]{flex:1 1 100%;text-align:center}
+  .suberr{max-width:none}
+  /* send advertisement */
+  .adwrap .panel-h h2{flex:1 1 100%}
+  .adbtns{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .adbtns .btn{padding:11px 8px;white-space:nowrap}
+  #adsend{position:fixed;left:12px;right:12px;bottom:calc(70px + env(safe-area-inset-bottom));z-index:25;padding:14px;font-size:16px;border-radius:12px;box-shadow:0 6px 20px rgba(79,70,229,.35)}
+  #vA{padding-bottom:150px}
+  .adstrip{padding:10px 12px;flex-wrap:wrap;gap:6px 12px}
+  .adstrip .grow{display:none}
+  .adhead{display:none}
+  .adr{grid-template-columns:116px 1fr 44px;grid-template-areas:"cc num del" "name name name" "chip chip chip" "reason reason reason";gap:0 8px;padding:12px 12px 4px;border-bottom:1px solid var(--line)}
+  .adr>*{margin-bottom:8px}
+  .adr .ccbtn{grid-area:cc;padding:11px 10px}
+  .adr .adnum{grid-area:num;padding:11px}
+  .adr .adname{grid-area:name;padding:11px}
+  .adr .adx{grid-area:del;width:44px;height:44px}
+  .adr .adchip{grid-area:chip}.adr .adchip:empty{display:none}
+  .adr .adreason{grid-area:reason;padding:0}
+  .ccmenu{left:8px!important;right:8px;top:auto!important;bottom:calc(8px + env(safe-area-inset-bottom));width:auto;max-height:70vh}
+  .cclist{max-height:50vh}
+  .ccitem{padding:12px 10px}
+  /* messages */
+  .msgwrap{grid-template-columns:minmax(0,1fr);height:calc(100vh - 52px - 62px - env(safe-area-inset-bottom));height:calc(100dvh - 52px - 62px - env(safe-area-inset-bottom))}
+  .side-h{padding:10px}
+  .conv{padding:12px}
+  .chat-h{padding:8px 10px;gap:10px}
+  .chat-h .btn{padding:8px 10px;font-size:13px;white-space:nowrap}
+  .chat-h .s{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:48vw}
+  .chat-h>div:nth-child(3){min-width:0}
+  .adwrap{margin-top:12px}
+  .back{display:inline-grid;place-items:center;width:40px;height:40px;padding:0;font-size:22px;line-height:1}
+  .stream{padding:12px 10px}
+  .b{max-width:88%}
+  .act{top:-18px;right:6px}.act button{width:34px;height:32px}
+  .rxpick{top:-56px;max-width:calc(100vw - 40px);overflow-x:auto}
+  .rxpick button{width:38px;height:38px}
+  .compose{padding:8px 8px calc(8px + env(safe-area-inset-bottom));gap:4px}
+  .compose .icon{width:40px;height:40px}
+  .emo{left:8px;right:8px;grid-template-columns:repeat(8,1fr);bottom:calc(60px + env(safe-area-inset-bottom))}
+  .emo button{height:38px;font-size:22px}
+  .mwrap{min-width:0}.skel{width:100%}
+  .file{min-width:0;width:100%}
+  .modal .mf{padding:10px 12px calc(14px + env(safe-area-inset-bottom))}
+  .modal .big{min-width:0;width:90%;padding:22px}
+  /* hide the bottom bar while a chat is open so the composer owns the bottom */
+  body[data-view="M"] .msgwrap.open ~ .bnav,.msgwrap.open{}
+}
+@media(max-width:820px){body[data-view="M"]:has(.msgwrap.open) .bnav{display:none}body[data-view="M"]:has(.msgwrap.open){padding-bottom:0}.msgwrap.open{height:calc(100dvh - 52px)}}
 </style></head>
 <body>
 <div class="top">
@@ -224,7 +325,7 @@ td.err{white-space:normal;max-width:260px;color:var(--bad);font-size:12px}
     <button class="tab" id="tM">Messages <span class="count hide" id="badge"></span></button>
   </div>
   <div class="grow"></div>
-  <div class="live"><i class="dot" id="dot"></i><span id="upd">connecting...</span><span id="user" class="muted hide"></span><a id="logout" class="hide" href="/cdn-cgi/access/logout" style="color:var(--brand);font-weight:600;text-decoration:none">Sign out</a></div>
+  <div class="live"><i class="dot" id="dot"></i><span id="upd">connecting...</span><button class="acct hide" id="acct" type="button" aria-label="Account"></button></div>
 </div>
 
 <div id="vD" class="page">
@@ -278,6 +379,11 @@ td.err{white-space:normal;max-width:260px;color:var(--bad);font-size:12px}
   <div id="adlist"></div>
   <div class="meter hide" id="admeter"><i id="adfill"></i></div>
 </div></div>
+<nav class="bnav" id="bnav">
+  <button id="bA" type="button"><svg class="ic" viewBox="0 0 24 24"><path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z"/></svg><span>Advertise</span></button>
+  <button id="bD" type="button"><svg class="ic" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span>Recipients</span></button>
+  <button id="bM" type="button"><svg class="ic" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>Messages</span><i class="count hide" id="badge2"></i></button>
+</nav>
 <div id="overlay"></div>
 
 <script>
@@ -323,9 +429,12 @@ function fileKind(n){const e=extOf(n);if(e==='pdf')return ['pdf','PDF'];if(['doc
 let DATA=null,CONVOS=[],SEL=null,VIEW='D',SORT={k:'last_ts',d:-1},FILTER='all',CFILTER='all',CHATKEY='',STICK=true,OPEN=false;
 function show(v){VIEW=v;$('vD').classList.toggle('hide',v!=='D');$('vM').classList.toggle('hide',v!=='M');$('vA').classList.toggle('hide',v!=='A');
   $('tD').classList.toggle('on',v==='D');$('tM').classList.toggle('on',v==='M');$('tA').classList.toggle('on',v==='A');
+  $('bD').classList.toggle('on',v==='D');$('bM').classList.toggle('on',v==='M');$('bA').classList.toggle('on',v==='A');
+  document.body.setAttribute('data-view',v);window.scrollTo(0,0);
   history.replaceState(null,'',v==='M'?'#messages':v==='D'?'#recipients':'#advertisement');
   if(v==='A')openAd();refresh();}
 $('tD').onclick=()=>show('D');$('tM').onclick=()=>show('M');$('tA').onclick=()=>show('A');
+$('bD').onclick=()=>show('D');$('bM').onclick=()=>show('M');$('bA').onclick=()=>show('A');
 
 // ---------- dashboard ----------
 function kpi(label,val,sub,c){return el('div',{class:'kpi',style:'--c:'+c},el('span',{},label),el('b',{class:'num'},val),sub?el('small',{},sub):null);}
@@ -356,17 +465,17 @@ function renderDash(){
   if(!rows.length)tb.append(el('tr',{},el('td',{colspan:6,class:'empty'},DATA.rows.length?'No recipients match this filter.':'No messages sent yet.')));
   rows.slice(0,SHOWN).forEach(r=>{
     const edit=async()=>{const v=prompt('Name for '+phoneFmt(r.phone),r.name);if(v===null)return;await api('/api/contact',{method:'POST',body:JSON.stringify({phone:r.phone,name:v})});toast('Saved');refresh();};
-    const more=r.messages>1?r.messages+' messages - '+(r.delivered+r.read)+' delivered, '+r.read+' read'+(r.failed?', '+r.failed+' failed':''):'';
+    const more=r.messages>1?(r.delivered+r.read)+' delivered, '+r.read+' read'+(r.failed?', '+r.failed+' failed':''):'';
     tb.append(el('tr',{},
       el('td',{},el('div',{class:'who editable',title:'Click to edit name',onclick:edit},el('div',{class:'av sm',style:'background:'+color(r.phone)},initials(r.name,r.phone)),
         el('div',{},el('div',{class:'nm'},r.name?r.name:el('span',{class:'addname'},'Add name')),el('div',{class:'ph num'},phoneFmt(r.phone)+(r.city?' - '+r.city:''))))),
       el('td',{},el('span',{class:'pill '+r.latest,title:r.auto_only?'Only an automated reply received - read receipt ignored':''},r.latest==='accepted'?'queued':(r.latest==='untracked'?'no data':r.latest)),r.auto_only?el('span',{class:'sub'},'auto-reply only'):null,r.last_error?el('span',{class:'suberr',title:r.last_error},errText(r.last_error)):null),
-      el('td',{class:'n num'},r.messages,more?el('span',{class:'sub',style:'white-space:normal;max-width:170px;margin-left:auto'},more):null),
+      el('td',{class:'n num'},el('span',{class:'cnt'},r.messages),more?el('span',{class:'sub msub'},more):null),
       el('td',{},r.sent_by?el('span',{class:r.sent_by==='campaign'?'tag':'byc',title:r.sent_by==='campaign'?'Sent automatically by the daily campaign':r.sent_by},byLabel(r.sent_by)):el('span',{class:'muted'},'-')),
       el('td',{class:'n'},r.replies?el('button',{class:'btn',onclick:()=>{show('M');openChat(r.phone);}},'Chat ('+r.replies+')'):el('span',{class:'muted'},'-')),
       el('td',{title:r.last_ts?new Date(r.last_ts*1000).toLocaleString():''},ago(r.last_ts),r.last_ts?el('span',{class:'sub'},new Date(r.last_ts*1000).toLocaleDateString([], {day:'numeric',month:'short'})+', '+hm(r.last_ts)):null)));});
   if(rows.length>SHOWN)tb.append(el('tr',{},el('td',{colspan:6,style:'text-align:center'},el('button',{class:'btn',onclick:()=>{SHOWN+=200;renderDash();}},'Show more ('+(rows.length-SHOWN)+' more)'))));
-  const b=$('badge');b.textContent=DATA.needs_human;b.classList.toggle('hide',!DATA.needs_human);
+  ['badge','badge2'].forEach(id=>{const b=$(id);b.textContent=DATA.needs_human;b.classList.toggle('hide',!DATA.needs_human);});
 }
 $('q').oninput=()=>{SHOWN=150;renderDash();};
 $('csv').onclick=()=>{if(!DATA)return;const L=['name,phone,city,messages,delivered,read,failed,latest_status,last_error,sent_by,replies'];
@@ -451,6 +560,7 @@ function bubble(x){
     if(!confirm('Delete this message from the dashboard?'+NL+'It will NOT be removed from the recipient WhatsApp.'))return;
     await api('/api/delete-message',{method:'POST',body:JSON.stringify({id:x.id})});refresh(true);},true));
   b.append(act);
+  b.onclick=e=>{if(e.target.closest('.act,.rxpick,img,video,audio,button,a'))return;document.querySelectorAll('.act.open').forEach(x=>{if(x!==act)x.classList.remove('open');});act.classList.toggle('open');};
   return b;}
 
 function closePreview(){ATT=null;$('overlay').replaceChildren();document.removeEventListener('keydown',pvEsc);}
@@ -618,7 +728,7 @@ function rowEl(r){
   const num=el('input',{class:'adin adnum',inputmode:'tel',placeholder:'Mobile number','aria-label':'Mobile number'});num.value=r.num;
   const nm=el('input',{class:'adin adname',placeholder:'Name (optional)'});nm.value=r.name;
   const chip=el('span',{class:'hide'}),reason=el('div',{class:'adreason hide'});
-  const del=ibtn('icon','close','Remove',()=>{AD.rows=AD.rows.filter(x=>x!==r);if(!AD.rows.length)AD.rows.push(newRow());renderAd(true);scheduleCheck();},true);
+  const del=ibtn('icon adx','close','Remove',()=>{AD.rows=AD.rows.filter(x=>x!==r);if(!AD.rows.length)AD.rows.push(newRow());renderAd(true);scheduleCheck();},true);
   num.oninput=()=>{r.num=num.value.replace(/[^0-9 -]/g,'');if(num.value!==r.num)num.value=r.num;changed();};
   nm.oninput=()=>{r.name=nm.value;};
   num.onpaste=e=>{const t=(e.clipboardData||window.clipboardData).getData('text');
@@ -626,7 +736,7 @@ function rowEl(r){
   const next=e=>{if(e.key==='Enter'){e.preventDefault();const nr=newRow(r.cc,'','',r.iso);AD.rows.splice(AD.rows.indexOf(r)+1,0,nr);renderAd(true);nr.numInput.focus();}};
   num.onkeydown=next;nm.onkeydown=next;
   r.chip=chip;r.reason=reason;r.numInput=num;
-  return el('div',{class:'adr'},ccb,num,nm,el('div',{},chip),del,reason);
+  return el('div',{class:'adr'},ccb,num,nm,el('div',{class:'adchip'},chip),del,reason);
 }
 function classifyAd(){
   const seen=new Set();let cap=AD.info?AD.info.remaining:0;
@@ -644,7 +754,7 @@ function classifyAd(){
   });
 }
 function updateChips(){AD.rows.forEach(r=>{if(!r.chip)return;const st=ADST[r.state];const show=st&&r.state!=='new';
-  r.chip.className=show?'pill '+st[1]:'hide';r.chip.textContent=show?st[0]:'';r.chip.title=r.note||'';
+  r.chip.parentNode.style.display=show?'':'none';r.chip.className=show?'pill '+st[1]:'hide';r.chip.textContent=show?st[0]:'';r.chip.title=r.note||'';
   r.reason.textContent=r.state==='failed'?r.note:'';r.reason.classList.toggle('hide',r.state!=='failed');});}
 function updateSummary(){
   const cnt={};AD.rows.forEach(r=>{if(r.state)cnt[r.state]=(cnt[r.state]||0)+1;});
@@ -716,6 +826,15 @@ function renderCamp(){
 }
 async function loadCamp(){try{CAMP=await (await api('/api/campaign')).json();renderCamp();}catch(e){}}
 
+// ---------- account ----------
+function setAcct(email){
+  const b=$('acct');b.textContent=(email||'?')[0].toUpperCase();b.classList.remove('hide');
+  b.onclick=e=>{e.stopPropagation();const old=document.getElementById('acctmenu');if(old){old.remove();return;}
+    const m=el('div',{id:'acctmenu',class:'acctmenu'},el('div',{class:'muted',style:'font-size:12px'},'Signed in as'),el('div',{style:'font-weight:600;word-break:break-all;margin-bottom:8px'},email),
+      el('a',{class:'btn',href:'/cdn-cgi/access/logout',style:'display:block;text-align:center;text-decoration:none;color:var(--text)'},'Sign out'));
+    m.onclick=ev=>ev.stopPropagation();document.body.append(m);setTimeout(()=>document.addEventListener('click',function f(){m.remove();document.removeEventListener('click',f);}),0);};
+}
+
 // ---------- refresh loop ----------
 async function refresh(force){
   try{
@@ -726,7 +845,7 @@ async function refresh(force){
   }catch(e){$('upd').textContent=e.message;$('dot').classList.add('off');}
 }
 (async()=>{
-  try{const j=await (await fetch('/api/me')).json();if(j.via==='access'){ACCESS=true;$('user').textContent=j.email;$('user').classList.remove('hide');$('logout').classList.remove('hide');}}catch(e){}
+  try{const j=await (await fetch('/api/me')).json();if(j.via==='access'){ACCESS=true;setAcct(j.email);}}catch(e){}
   show(location.hash==='#messages'?'M':location.hash==='#recipients'?'D':'A');setInterval(()=>{if(!document.hidden)refresh();},8000);
 })();
 </script></body></html>`;
