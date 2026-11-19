@@ -250,23 +250,32 @@ body{overflow-x:hidden}
   .scroll{max-height:none;overflow:visible}
   /* recipients as cards */
   .rt,.rt tbody{display:block;width:100%}.rt thead{display:none}
-  .rt tr{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:14px 12px;border-bottom:1px solid var(--line)}
-  .rt td{display:block;padding:0;border:0;white-space:normal;text-align:left}
-  .rt td:nth-child(1){flex:1 1 100%}
-  .rt td:nth-child(2){flex:1 1 100%}
-  .rt td:nth-child(3){order:3;font-size:13px;color:var(--muted)}
-  .rt td:nth-child(3) .cnt{color:var(--text);font-weight:600}.rt td:nth-child(3) .cnt:after{content:' sent'}
-  .rt td:nth-child(3) .msub{display:inline;margin:0 0 0 4px;max-width:none}.rt td:nth-child(3) .msub:before{content:'('}.rt td:nth-child(3) .msub:after{content:')'}
-  .rt td:nth-child(4){order:4;font-size:13px;color:var(--muted)}.rt td:nth-child(4):before{content:'by '}
-  .rt td:nth-child(6){order:5;font-size:13px;color:var(--muted)}
-  .rt td:nth-child(6) .sub{display:none}
+  .rt tbody{padding:4px 0}
+  .rt tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 16px;align-items:start;padding:16px 14px;margin:0 0 10px;background:var(--panel,#fff);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05)}
+  .rt td{display:block;padding:0;border:0;white-space:normal;text-align:left;min-width:0}
+  .rt td:nth-child(1),.rt td:nth-child(2){grid-column:1/-1}
+  .rt .nm{max-width:none;font-size:17px;font-weight:700;line-height:1.3}
+  .rt .ph{font-size:14px}
+  .rt .av.sm{width:44px;height:44px;font-size:15px}
+  .rt td:nth-child(2) .pill{font-size:14px;padding:5px 12px}
+  .rt td:nth-child(2) .sub{display:inline-block;margin:0 0 0 8px;font-size:13px}
+  .suberr{font-size:13.5px;margin-top:8px;padding:8px 10px;background:rgba(220,38,38,.07);border-radius:8px}
+  .rt td:nth-child(3),.rt td:nth-child(4),.rt td:nth-child(6){font-size:16px;font-weight:600;color:var(--text)}
+  .rt td:nth-child(3),.rt td:nth-child(4){padding-top:12px;border-top:1px solid var(--line)}
+  .rt td:nth-child(3){order:3}.rt td:nth-child(4){order:4}.rt td:nth-child(6){order:5}.rt td:nth-child(5){order:6}
+  .rt td:nth-child(3):before,.rt td:nth-child(4):before,.rt td:nth-child(6):before{display:block;font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+  .rt td:nth-child(3):before{content:'Messages sent'}
+  .rt td:nth-child(4):before{content:'Sent by'}
+  .rt td:nth-child(6):before{content:'Last update'}
+  .rt td:nth-child(3) .sub{display:block;font-size:12.5px;font-weight:400;margin:3px 0 0!important;max-width:none!important}
+  .rt td:nth-child(6) .sub{display:block;font-size:12.5px;font-weight:400}
   .rt td:nth-child(5) .muted{display:none}
-  .rt td:nth-child(5):empty{display:none}
-  .rt td:nth-child(5){order:9;margin-left:auto}
-  .rt td:nth-child(5) .btn{padding:8px 14px}
-  .rt .byc{max-width:170px;display:inline-block;vertical-align:bottom}
-  .rt .nm{max-width:none}
-  .rt tr td[colspan]{flex:1 1 100%;text-align:center}
+  .rt td:nth-child(5):has(.muted){display:none}
+  .rt td:nth-child(5){align-self:end}
+  .rt td:nth-child(5) .btn{width:100%;padding:12px 14px;font-size:15px;font-weight:600}
+  .rt .byc{max-width:none;display:block;white-space:normal;word-break:break-all;font-size:14px}
+  .rt .tag{font-size:14px;padding:3px 10px}
+  .rt tr td[colspan]{grid-column:1/-1;text-align:center}
   .suberr{max-width:none}
   /* send advertisement */
   .adwrap .panel-h h2{flex:1 1 100%}
