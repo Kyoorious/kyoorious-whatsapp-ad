@@ -1,3 +1,11 @@
-*
-!wa_bulk_send.py
-!.gitignore
+# Ignore everything by default (contacts, results, PDFs, secrets, PINs, local config)...
+/*
+# ...and track only the code
+!/.gitignore
+!/wa_bulk_send.py
+!/wa_pull_status.py
+!/webhook/
+/webhook/*
+!/webhook/schema.sql
+!/webhook/wrangler.toml.example
+!/webhook/src/

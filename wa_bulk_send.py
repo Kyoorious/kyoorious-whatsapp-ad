@@ -54,6 +54,19 @@ def load_ledger():
     return sent, failed, recent
 
 
+def push_sent(phone, text, name=""):
+    """Register a successful send with the dashboard (optional)."""
+    base, key = os.environ.get("WA_WEBHOOK_URL"), os.environ.get("WA_ADMIN_KEY")
+    if not (base and key):
+        return
+    try:
+        wamid = requests.models.complexjson.loads(text)["messages"][0]["id"]
+        requests.post(f"{base}/api/sent", headers={"x-admin-key": key, "User-Agent": "Mozilla/5.0"},
+                      json={"items": [{"wamid": wamid, "phone": phone, "ts": int(time.time()), "name": name}]}, timeout=15)
+    except Exception:
+        pass
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("csv_file", nargs="?")
@@ -61,6 +74,7 @@ def main():
     ap.add_argument("--limit", type=int)
     ap.add_argument("--retry-failed", action="store_true")
     ap.add_argument("--failures", action="store_true")
+    ap.add_argument("--force", action="store_true", help="resend even if already sent (tests only)")
     a = ap.parse_args()
 
     sent, failed, recent = load_ledger()
@@ -79,7 +93,7 @@ def main():
     if not a.dry_run and not (token and phone_id and (video or video_id)):
         sys.exit("Set WA_TOKEN, WA_PHONE_ID and WA_VIDEO_ID (or WA_VIDEO_URL) first.")
 
-    seen, todo = set(), []
+    seen, todo, names = set(), [], {}
     dup_sent = dup_file = invalid = 0
     with open(a.csv_file, newline="", encoding="utf-8-sig") as f:
         for r in csv.DictReader(f):
@@ -89,7 +103,7 @@ def main():
                 print("SKIP invalid:", r.get("phone"))
             elif n in seen:
                 dup_file += 1
-            elif n in sent:
+            elif n in sent and not a.force:
                 dup_sent += 1
                 seen.add(n)
             elif n in failed and not a.retry_failed:
@@ -98,6 +112,7 @@ def main():
             else:
                 seen.add(n)
                 todo.append(n)
+                names[n] = (r.get("name") or "").strip()
 
     room = max(DAILY_CAP - recent, 0)
     limit = min(a.limit or room, room)
@@ -135,6 +150,8 @@ def main():
                 code, text = str(r.status_code), r.text
             except requests.RequestException as e:
                 code, text = "EXC", str(e)
+            if code == "200":
+                push_sent(n, text, names.get(n, ""))
             ok += code == "200"
             bad += code != "200"
             print(n, code, text[:120])

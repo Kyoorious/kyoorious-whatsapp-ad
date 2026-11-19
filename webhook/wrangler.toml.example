@@ -1,0 +1,17 @@
+name = "kyoorious-wa-webhook"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+WA_PHONE_ID = "YOUR_PHONE_NUMBER_ID"
+ACCESS_TEAM_DOMAIN = "your-team.cloudflareaccess.com"
+ACCESS_AUD = "YOUR_ACCESS_APPLICATION_AUD_TAG"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kyoorious-wa"
+database_id = "YOUR_D1_DATABASE_ID"
+
+[triggers]
+# Daily campaign window (UTC): 12:30-16:58 = 6:00 PM-10:28 PM IST, one run every 2 minutes
+crons = ["30-58/2 12 * * *", "*/2 13-16 * * *"]
