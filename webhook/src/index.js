@@ -41,10 +41,13 @@ async function campaignGuard(env, now) {
   const rows = (await env.DB.prepare(
     "SELECT m.wamid, EXISTS(SELECT 1 FROM statuses s WHERE s.wamid=m.wamid AND s.status='failed') f FROM messages m WHERE m.source='queue' AND m.sent_ts<? AND m.sent_ts>? AND m.wamid NOT LIKE 'fail:%'")
     .bind(now - 6 * 3600, now - 4 * 86400).all()).results;
-  if (rows.length >= 50) {
+  if (rows.length >= 30) {
     const failed = rows.filter((x) => x.f).length;
-    if (failed / rows.length > 0.6) return `Last lot failed too often: ${failed} of ${rows.length} (${Math.round(failed / rows.length * 100)}%)`;
+    if (failed / rows.length > 0.35) return `Last lot failed too often: ${failed} of ${rows.length} (${Math.round(failed / rows.length * 100)}%)`;
   }
+  // 131049 = Meta holding back marketing messages to protect engagement: a throttling signal
+  const thr = (await env.DB.prepare("SELECT COUNT(*) n FROM statuses WHERE error_code='131049' AND ts>?").bind(now - 3 * 3600).first()).n || 0;
+  if (thr >= 5) return `Meta is throttling marketing messages (131049 x${thr} in the last 3 hours)`;
   return "";
 }
 
@@ -56,11 +59,10 @@ async function campaignRun(env) {
   const pause = async (why) => { await setSetting(env, "campaign_state", "paused"); await setSetting(env, "campaign_pause_reason", why); return note({ paused: why }); };
   const vid = await getSetting(env, "video_id");
   if (!vid) return pause("Ad video missing: upload it on the Send Advertisement tab");
-  const today = String(Math.floor((now + IST) / 86400));
-  if ((await getSetting(env, "guard_day")) !== today) {
+  if (now - (Number(await getSetting(env, "guard_ts")) || 0) > 2 * 3600) {
     const bad = await campaignGuard(env, now);
     if (bad) return pause(bad);
-    await setSetting(env, "guard_day", today);
+    await setSetting(env, "guard_ts", now);
   }
   const lot = Math.min(Math.max(Number(await getSetting(env, "lot_size")) || 200, 1), DAILY_CAP - SPARE_SLOTS);
   const dayStart = now - ((now + IST) % 86400);
@@ -495,7 +497,7 @@ export default {
       const { action, lot_size } = await request.json();
       if (lot_size !== undefined) await setSetting(env, "lot_size", Math.min(Math.max(parseInt(lot_size, 10) || 200, 10), DAILY_CAP - SPARE_SLOTS));
       if (action === "pause") await setSetting(env, "campaign_state", "paused");
-      if (action === "resume") { await setSetting(env, "campaign_state", "running"); await setSetting(env, "campaign_pause_reason", ""); await setSetting(env, "guard_day", ""); }
+      if (action === "resume") { await setSetting(env, "campaign_state", "running"); await setSetting(env, "campaign_pause_reason", ""); await setSetting(env, "guard_ts", 0); }
       return json(await campaignInfo(env));
     }
 
